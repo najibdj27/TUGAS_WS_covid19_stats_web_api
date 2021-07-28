@@ -105,7 +105,7 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-sm">
                         <thead>
-                            <tr>
+                            <tr class="table-dark text-md-center">
                                 <th scope="col">#</th>
                                 <th scope="col">Negara</th>
                                 <th scope="col">Populasi</th>
