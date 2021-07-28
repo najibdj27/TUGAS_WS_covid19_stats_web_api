@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use SebastianBergmann\Environment\Console;
 
 class CovidController extends Controller
 {
@@ -13,7 +14,11 @@ class CovidController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $data = file_get_contents('https://covid-api.mmediagroup.fr/v1/cases');
+        $cases = json_decode($data, true);
+        // dd($cases["Afghanistan"]["All"]["country"]);
+
+        return view('dashboard', compact('cases'));
     }
 
     /**
