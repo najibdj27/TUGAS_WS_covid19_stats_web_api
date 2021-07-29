@@ -1,6 +1,6 @@
 @extends('layout.base')
 
-@section('tittle',  'C19 | Dashboard')
+@section('tittle',  'C-19 | Dashboard')
 
 @section('content')
     @include('layout.header')
@@ -10,8 +10,7 @@
             @include('layout.sidebar')
             {{-- Main Content --}}
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Kasus Covid-19 Terkonfirmasi Di Dunia</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">

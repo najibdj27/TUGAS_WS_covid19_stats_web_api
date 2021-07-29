@@ -14,10 +14,10 @@ class CovidController extends Controller
      */
     public function index()
     {
-        $data = file_get_contents('https://covid-api.mmediagroup.fr/v1/cases');
-        $cases = json_decode($data, true);
+        $confirmed_cases = file_get_contents('https://covid-api.mmediagroup.fr/v1/cases');
+        $cases = json_decode($confirmed_cases, true);
 
-        return view('dashboard', compact('cases'));
+        return view('dashboard', compact('cases'))->with('active', 'Dashboard');
     }
 
     /**
