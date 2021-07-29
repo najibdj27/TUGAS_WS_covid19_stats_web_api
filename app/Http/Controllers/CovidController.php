@@ -16,7 +16,7 @@ class CovidController extends Controller
     {
         $data = file_get_contents('https://covid-api.mmediagroup.fr/v1/cases');
         $cases = json_decode($data, true);
-        // dd($cases["Afghanistan"]["All"]["country"]);
+        // dd($cases);
 
         return view('dashboard', compact('cases'));
     }
