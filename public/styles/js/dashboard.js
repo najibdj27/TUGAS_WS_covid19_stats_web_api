@@ -1,53 +1,53 @@
 /* globals Chart:false, feather:false */
 var seven_days = [];
-(function () {
+var deaths = [];
+
+function addCommas(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
+$.ajax({
+  type: "GET",
+  url: "https://covid-api.mmediagroup.fr/v1/history",
+  data: {
+    'status': 'Confirmed'
+  },
+  dataType: 'json',
+  success: function (response) {
+    let sum_res = 0;
+    
+    for (let index = 1; index < 9; index++) {
+      const d = new Date();
+      let year = d.getFullYear();
+      let month = ("0" + (d.getMonth()+1)).slice(-2);
+      let date = ("0" + (d.getDate()-index)).slice(-2);
+      var now = year+'-'+month+'-'+date;
+      seven_days.push(now);
+    }
+    $.each(seven_days, function (params) {
+      $.each(response, function (i) { 
+        let res = response[i].All.dates[seven_days.reverse()[params]];
+        sum_res += res;
+      });
+      deaths.push(sum_res);
+    });
+  }
+});
+
+$(document).ajaxComplete(function (){
+  (function () {
   'use strict'
 
   feather.replace({ 'aria-hidden': 'true' })
-  $.ajax({
-    type: "GET",
-    url: "https://covid-api.mmediagroup.fr/v1/history",
-    data: {
-      'status': 'Confirmed'
-    },
-    dataType: 'json',
-    success: function (response) {
-      var deaths = 0;
-      var res = {};
-      var country = Object.keys(response);
-      // for (let i = 0; i < 7; i++) {
-      //   var date_list = Object.keys(response.Afghanistan.All.dates[i]);
-      //   date_list_data += date_list;
-      // }
-      
-      for (let index = 1; index < 9; index++) {
-        const d = new Date();
-        let year = d.getFullYear();
-        let month = d.getMonth()+1;
-        let date = d.getDate()-index;
-        var now = year+'-'+month+'-'+date;
-        seven_days.push(now);
-      }
-      console.log(seven_days);
-
-      $.each(response, function (i, value) { 
-        let y = response[i].All.dates["2021-07-28"];
-        let res = y;
-        deaths += res;
-        // for (let idx = 0; idx < 7; idx++) {
-        //   let y = response[i].All.dates[idx];
-        //   let res = y;
-        //   deaths += res;
-        // }
-        // $.each(response[i].All.dates, function(x, y){
-        //   let res = y;
-        //   deaths += res;
-        // });
-      });
-      
-      console.log(deaths);
-    }
-  });
 
   // Graphs
   var ctx = document.getElementById('myChart')
@@ -57,19 +57,11 @@ var seven_days = [];
     data: {
       labels: seven_days,
       datasets: [{
-        data: [
-          1339,
-          21345,
-          18483,
-          24003,
-          23489,
-          24092,
-          12034
-        ],
+        data: deaths,
         lineTension: 0,
         backgroundColor: 'transparent',
         borderColor: '#007bff',
-        borderWidth: 4,
+        borderWidth: 2,
         pointBackgroundColor: '#007bff'
       }]
     },
@@ -87,3 +79,5 @@ var seven_days = [];
     }
   })
 })()
+});
+
