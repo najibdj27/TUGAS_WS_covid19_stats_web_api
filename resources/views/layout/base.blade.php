@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" href="https://cdn.pixabay.com/photo/2020/04/29/07/54/coronavirus-5107715_1280.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
