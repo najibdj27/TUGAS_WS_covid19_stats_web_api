@@ -14,4 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [CovidController::class, 'index']);
+Route::get('/statistik', [CovidController::class, 'statistik']);
+Route::get('/grafik', [CovidController::class, 'grafik']);

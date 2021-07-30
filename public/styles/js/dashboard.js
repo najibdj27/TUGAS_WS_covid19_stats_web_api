@@ -1,19 +1,13 @@
 /* globals Chart:false, feather:false */
-var seven_days = [];
-var deaths = [];
+var myChart= '';
+var week = [];
+var month = [];
+var year = [];
+var deaths7 = [];
+var deaths30 = [];
+var deaths365 = [];
 
-function addCommas(nStr)
-{
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
-    }
-    return x1 + x2;
-}
+feather.replace({ 'aria-hidden': 'true' })
 
 $.ajax({
   type: "GET",
@@ -24,53 +18,147 @@ $.ajax({
   dataType: 'json',
   success: function (response) {
     let sum_res = 0;
-    
-    for (let index = 1; index < 9; index++) {
-      const d = new Date();
-      let year = d.getFullYear();
-      let month = ("0" + (d.getMonth()+1)).slice(-2);
-      let date = ("0" + (d.getDate()-index)).slice(-2);
-      var now = year+'-'+month+'-'+date;
-      seven_days.push(now);
+    for (let index = 1; index < 8; index++) {
+      var date = new Date();
+      date.setDate(date.getDate() - index);
+      var dateString = date.toISOString().split('T')[0];
+      week.push(dateString);
     }
-    $.each(seven_days, function (params) {
+    for (let index = 1; index < 31; index++) {
+      var date = new Date();
+      date.setDate(date.getDate() - index);
+      var dateString = date.toISOString().split('T')[0];
+      month.push(dateString);
+    }
+    for (let index = 1; index < 366; index++) {
+      var date = new Date();
+      date.setDate(date.getDate() - index);
+      var dateString = date.toISOString().split('T')[0];
+      year.push(dateString);
+    }
+    $.each(week, function (params) {
       $.each(response, function (i) { 
-        let res = response[i].All.dates[seven_days.reverse()[params]];
+        let res = response[i].All.dates[week.reverse()[params]];
         sum_res += res;
       });
-      deaths.push(sum_res);
+      deaths7.push(sum_res);
+    });
+    $.each(month, function (params) {
+      $.each(response, function (i) { 
+        let res = response[i].All.dates[month.reverse()[params]];
+        sum_res += res;
+      });
+      deaths30.push(sum_res);
+    });
+    $.each(year, function (params) {
+      $.each(response, function (i) { 
+        let res = response[i].All.dates[year.reverse()[params]];
+        sum_res += res;
+      });
+      deaths365.push(sum_res);
     });
   }
 });
+$.ajax({
+  type: "GET",
+  url: "https://covid-api.mmediagroup.fr/v1/history",
+  data: {
+    'status': 'Deaths'
+  },
+  dataType: 'json',
+  success: function (response) {
+    let sum_res = 0;
+    for (let index = 1; index < 8; index++) {
+      var date = new Date();
+      date.setDate(date.getDate() - index);
+      var dateString = date.toISOString().split('T')[0];
+      week.push(dateString);
+    }
+    for (let index = 1; index < 31; index++) {
+      var date = new Date();
+      date.setDate(date.getDate() - index);
+      var dateString = date.toISOString().split('T')[0];
+      month.push(dateString);
+    }
+    for (let index = 1; index < 366; index++) {
+      var date = new Date();
+      date.setDate(date.getDate() - index);
+      var dateString = date.toISOString().split('T')[0];
+      year.push(dateString);
+    }
+    $.each(week, function (params) {
+      $.each(response, function (i) { 
+        let res = response[i].All.dates[week.reverse()[params]];
+        sum_res += res;
+      });
+      deaths7.push(sum_res);
+    });
+    $.each(month, function (params) {
+      $.each(response, function (i) { 
+        let res = response[i].All.dates[month.reverse()[params]];
+        sum_res += res;
+      });
+      deaths30.push(sum_res);
+    });
+    $.each(year, function (params) {
+      $.each(response, function (i) { 
+        let res = response[i].All.dates[year.reverse()[params]];
+        sum_res += res;
+      });
+      deaths365.push(sum_res);
+    });
+  }
+});
+
 
 $(document).ajaxComplete(function (){
   (function () {
   'use strict'
 
-  feather.replace({ 'aria-hidden': 'true' })
-
   // Graphs
   var ctx = document.getElementById('myChart')
   // eslint-disable-next-line no-unused-vars
-  var myChart = new Chart(ctx, {
+  myChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: seven_days,
+      labels: week.reverse(),
       datasets: [{
-        data: deaths,
-        lineTension: 0,
-        backgroundColor: 'transparent',
-        borderColor: '#007bff',
-        borderWidth: 2,
-        pointBackgroundColor: '#007bff'
+        label: 'Terkonfimasi',
+        data: deaths7,
+        fill: false,
+        borderColor: '#E72828',
+        tension: 0.1
       }]
     },
     options: {
+      tooltips: {
+        enable: true,
+        mode: 'single',
+        callbacks: {
+          title: function(tooltipItems, data) {
+            //Return value for title
+            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+              "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+            const dayNames = ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu",
+              "Minggu"
+            ];
+            let d = new Date(tooltipItems[0].xLabel);
+            return dayNames[d.getDay()]+", "+d.getDate()+" "+monthNames[d.getMonth()]+" "+d.getFullYear();
+          },
+          label: function(tooltipItem, data) {
+            return "Terkonfirmasi"+": "+tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          },
+        }
+      },
       scales: {
         yAxes: [{
           ticks: {
-            beginAtZero: false
-          }
+            beginAtZero: false,
+            callback: function(value, index, values) {
+              return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            },
+          },
         }]
       },
       legend: {
@@ -78,6 +166,26 @@ $(document).ajaxComplete(function (){
       }
     }
   })
-})()
+  })()
 });
 
+$('#set-7').on('click', function(){
+  myChart.data.datasets[0].data = deaths7;
+  myChart.data.labels = week;
+  myChart.update();
+});
+$('#set-30').on('click', function(){
+  myChart.data.datasets[0].data = deaths30;
+  myChart.data.labels = month;
+  myChart.update();
+});
+$('#set-365').on('click', function(){
+  myChart.data.datasets[0].data = deaths365;
+  myChart.data.labels = year;
+  myChart.update();
+});
+$('#export-canvas').on('click', function () {
+  var ctx = document.getElementById('myChart');
+  window.location = ctx.toDataURL("img/png");
+  console.log('export');
+})

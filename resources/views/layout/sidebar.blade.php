@@ -2,25 +2,25 @@
     <div class="position-sticky pt-3">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link @if( $active === "Dashboard" ) active @endif" aria-current="page" href="#">
+                <a class="nav-link @if( $active === "Dashboard" ) active @endif" aria-current="page" href="/">
                     <span data-feather="home"></span>
                     Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link @if( $active === "Statistik" ) active @endif" href="statistik">
                     <span data-feather="file"></span>
                     Statistik
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link @if( $active === "Grafik" ) active @endif" href="/grafik">
                     <span data-feather="bar-chart-2"></span>
                     Grafik
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link @if( $active === "Vaksinasi" ) active @endif" href="/vaksinasi">
                     <span data-feather="heart"></span>
                     Vaksinasi
                 </a>

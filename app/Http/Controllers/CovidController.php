@@ -12,12 +12,18 @@ class CovidController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function grafik()
+    {
+
+        return view('grafik')->with('active', 'Grafik');
+    }
+
+    public function statistik()
     {
         $confirmed_cases = file_get_contents('https://covid-api.mmediagroup.fr/v1/cases');
         $cases = json_decode($confirmed_cases, true);
 
-        return view('dashboard', compact('cases'))->with('active', 'Dashboard');
+        return view('statistik', compact('cases'))->with('active', 'Statistik');
     }
 
     /**
