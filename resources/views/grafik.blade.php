@@ -3,10 +3,11 @@
 @section('tittle',  'C-19 | Grafik')
 
 @section('custom CSS')
-    <link href="{{ asset('styles/css/dashboard.css') }}" rel="stylesheet">
+    <link href="{{ asset('styles/css/loader.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
+    {{-- @include('layout.loader') --}}
     @include('layout.header')
     <div class="container-fluid">
         <div class="row">
